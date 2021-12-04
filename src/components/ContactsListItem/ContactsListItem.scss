@@ -1,0 +1,20 @@
+.name {
+  margin-right: 10px;
+}
+.number {
+  margin-right: 10px;
+}
+.button {
+  background-color: rgb(179, 221, 248);
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px 20px;
+  margin-left: 20px;
+}
+
+.button:hover {
+  background-color: rgb(72, 170, 235);
+  outline: 0;
+}

@@ -1,28 +1,82 @@
-import { Routes, Route } from 'react-router-dom';
-import Container from './components/Container/Container.jsx';
+import { Suspense, lazy } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { authOperations } from './redux/auth';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import AppBar from './components/AppBar/AppBar';
-import HomePage from './pages/HomePage';
-import RegisterPage from './pages/RegisterPage';
-import LoginPage from './pages/LoginPage';
-import ContactsPage from './pages/ContactsPage';
-import { Suspense } from 'react';
+import Loader from './components/Loader/Loader';
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
+import './App.scss';
 
-function App() {
+const HomeView = lazy(() =>
+  import('./views/HomeView/HomeView' /*webpackChunkName: "home-view"*/),
+);
+const RegisterView = lazy(() =>
+  import(
+    './views/RegisterView/RegisterView' /*webpackChunkName: "register-view"*/
+  ),
+);
+const LoginView = lazy(() =>
+  import('./views/LoginView/LoginView' /*webpackChunkName: "login-view"*/),
+);
+const ContactsView = lazy(() =>
+  import(
+    './views/ContactsView/ContactsView' /*webpackChunkName: "contacts-view"*/
+  ),
+);
+
+export default function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(authOperations.fetchCurrentUser());
+  }, [dispatch]);
+
   return (
-    <>
-      <Container>
-        <AppBar />
-        <Suspense>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/contacts" element={<ContactsPage />} />
-          </Routes>
-        </Suspense>
-      </Container>
-    </>
+    <div className="container">
+      <AppBar />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <PublicRoute path="/">
+                <HomeView />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/register"
+            element={
+              <PublicRoute path="/register" restricted>
+                <RegisterView />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/login"
+            element={
+              <PublicRoute path="/login" restricted>
+                <LoginView />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/contacts"
+            element={
+              <PrivateRoute path="/contacts">
+                <ContactsView />
+              </PrivateRoute>
+            }
+          />
+
+          <Route path="*" element={<h1>Error! Not found page</h1>} />
+        </Routes>
+      </Suspense>
+    </div>
   );
 }
-
-export default App;

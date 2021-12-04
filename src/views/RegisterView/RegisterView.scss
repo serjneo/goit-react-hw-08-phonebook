@@ -1,0 +1,25 @@
+.input {
+  border: 2px solid #303841;
+  padding: 15px;
+  border-radius: 5px;
+  margin-left: 10px;
+  font-size: 18px;
+  line-height: 24px;
+  padding: 0px 5px;
+  width: 200px;
+}
+
+.btn {
+  background-color: rgb(179, 221, 248);
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px 20px;
+  margin-left: 20px;
+}
+
+.btn:hover {
+  background-color: rgb(72, 170, 235);
+  outline: 0;
+}
